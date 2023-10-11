@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
+import 'package:weather/presentation/view/main_view.dart';
+import 'model/domain/weather_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MainView(),
     );
   }
 }
@@ -56,7 +62,45 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Location location = new Location();
 
+  void _getLocation() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    print(_locationData.latitude.toString() + " " + _locationData.longitude.toString());
+  }
+
+  void _getWeatherData() async{
+    var fetch = await fetchPost();
+    print("weather: "+jsonDecode(fetch.body).toString());
+  }
+
+  Future<http.Response> fetchPost() {
+    var uri = Uri.https('api.openweathermap.org','/data/2.5/weather',
+        {'lat':'6.25184','lon':'-75.56359','lang':'es',
+        'appid':'09c09d16add0d692539d39d53701650a','units':'metric'
+        });
+    return http.get(uri);
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -116,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _getWeatherData,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
