@@ -6,6 +6,9 @@ import 'package:location/location.dart';
 import 'package:weather/Provider/services/location_service.dart';
 import 'package:weather/Provider/services/weather_service.dart';
 import 'package:weather/presentation/view/main_view.dart';
+import 'package:weather/presentation/view/three_days_weather_view.dart';
+import 'package:weather/presentation/view/today_weather_view.dart';
+import 'package:weather/viewmodel/three_days_weather_viewmodel.dart';
 import 'package:weather/viewmodel/today_weather_viewmodel.dart';
 import 'model/domain/weather_model.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +22,7 @@ void main() {
   getIt.registerSingleton<WeatherService>(WeatherService());
   getIt.registerSingleton<LocationService>(LocationService());
   getIt.registerSingleton<TodayWeatherViewModel>(TodayWeatherViewModel());
+  getIt.registerSingleton<ThreeDaysWeatherViewModel>(ThreeDaysWeatherViewModel());
   runApp(const MyApp());
 }
 
@@ -31,25 +35,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainView(),
+      initialRoute: "/weather",
+      routes: {
+        "/weather":(BuildContext context) => MainView(TodayWeatherView(),0),
+        "/week":(BuildContext context) => MainView(ThreeDaysWeatherView(),1)
+      },
     );
   }
 }

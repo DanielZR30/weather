@@ -51,11 +51,7 @@ class _WeatherState extends State<_Weather> {
       Scaffold(
         body: Center(
           child: Column(
-            children: <Widget>[
-              Text('${
-                  (widget.weather!=null)?widget.weather.toString():
-                "Error:\nPor favor verifique los permisos o la conexion a internet"}')
-            ],
+            children:
           ),
         )
       );

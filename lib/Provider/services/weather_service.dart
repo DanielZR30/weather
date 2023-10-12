@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -37,19 +38,55 @@ class WeatherService{
       var uri = Uri.https('api.openweathermap.org','data/2.5/forecast',{
         'lat':'${_LocationData.latitude}','lon':'${_LocationData.longitude}','lang':'es',
         'appid':_APIKEY ,'units':'metric','exclude':'minutely,hourly,current,alerts',
-        'cnt': '3'
+        'cnt': '30'
       });
 
       final res = await http.get(uri);
 
       if(res!=null && res.statusCode == 200){
-        
-        return WeatherModel.dayFromJson(json.decode(res.body));
+        List<WeatherModel> weathers = getWeatherModelsFromJson(json.decode(res.body));
+        return calculateWeathers(weathers);
       }
       throw new Exception("Error, intenta más tarde.");
     }catch(e){
       return null;
     }
+  }
+
+  List<WeatherModel> getWeatherModelsFromJson(Map<String, dynamic> json) {
+    final weatherModels = <WeatherModel>[];
+    for (final item in json['list']) {
+      final weatherModel = WeatherModel.variousFromJson(item,
+          json['city']['name'],json['city']['country']);
+      weatherModels.add(weatherModel);
+    }
+    return weatherModels;
+  }
+
+  List<WeatherModel> calculateWeathers(List<WeatherModel> weathers){
+    List<WeatherModel> newWeathers = [];
+    WeatherModel auxWeather = new WeatherModel();
+    for (final item in weathers) {
+        if(validateDifferentDay(auxWeather.date,item.date)){
+          if(auxWeather.date!=null){
+            auxWeather.temperature = (auxWeather.maxTemperature! + auxWeather.minTemperature!)/2;
+            auxWeather.date!.toLocal();
+            newWeathers.add(auxWeather);
+          }
+          auxWeather = item;
+        }else{
+          auxWeather.minTemperature = min(auxWeather.minTemperature!, item.minTemperature!);
+          auxWeather.maxTemperature = max(auxWeather.maxTemperature!, item.maxTemperature!);
+        }
+    }
+    return newWeathers;
+  }
+
+  bool validateDifferentDay(DateTime? first,DateTime? second){
+    if(first == null || second == null){
+      return true;
+    }
+    return !(first.day == second.day && first.month == second.month && first.year == second.year);
   }
 
   Future getDeviceLocation(LocationService locationService) async{

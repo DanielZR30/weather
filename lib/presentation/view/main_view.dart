@@ -6,16 +6,16 @@ import 'package:weather/viewmodel/today_weather_viewmodel.dart';
 
 class MainView extends StatefulWidget{
 
-  const MainView ({super.key});
+  final StatefulWidget page;
+  int selectedPage;
 
+  MainView (StatefulWidget this.page, int this.selectedPage, {super.key});
 
   @override
   State<MainView> createState() => _MainViewState();
 }
 
 class _MainViewState extends State<MainView> {
-  int selectedPage = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +24,13 @@ class _MainViewState extends State<MainView> {
     final screens = [TodayWeatherView(),ThreeDaysWeatherView()];
 
     return Scaffold(
-      body: IndexedStack(
-        index: selectedPage,
-        children: screens,
-      ),
+      body: widget.page,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedPage,
+        currentIndex: widget.selectedPage,
         onTap: (index){
           setState(() {
-            selectedPage = index;
+            widget.selectedPage = index;
+            Navigator.of(context).pushNamed(_getRouteName(index));
           });
         },
         elevation: 0,
@@ -53,4 +51,16 @@ class _MainViewState extends State<MainView> {
         ],
       ),
     );
-  }}
+  }
+
+  String _getRouteName(int index) {
+    switch (index) {
+      case 0:
+        return '/weather';
+      case 1:
+        return '/week';
+      default:
+        return '/weather';
+    }
+  }
+}
