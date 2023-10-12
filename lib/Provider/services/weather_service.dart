@@ -26,7 +26,29 @@ class WeatherService{
       }
       throw new Exception("Error, intenta más tarde.");
     }catch(e){
-      return e;
+      return null;
+    }
+  }
+
+  Future fetch3daysWeatherAPI(LocationService locationService) async{
+    try {
+      await getDeviceLocation(locationService);
+
+      var uri = Uri.https('api.openweathermap.org','data/2.5/forecast',{
+        'lat':'${_LocationData.latitude}','lon':'${_LocationData.longitude}','lang':'es',
+        'appid':_APIKEY ,'units':'metric','exclude':'minutely,hourly,current,alerts',
+        'cnt': '3'
+      });
+
+      final res = await http.get(uri);
+
+      if(res!=null && res.statusCode == 200){
+        
+        return WeatherModel.dayFromJson(json.decode(res.body));
+      }
+      throw new Exception("Error, intenta más tarde.");
+    }catch(e){
+      return null;
     }
   }
 

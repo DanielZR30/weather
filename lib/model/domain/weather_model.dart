@@ -56,4 +56,11 @@ class WeatherModel {
     _city = json['name'];
     _date = DateTime.now();
   }
+
+  @override
+  String toString() {
+    return 'Clima para el dia de hoy (${date}) en ${city}-${country}: '
+        '\nTemperatura:${temperature}'
+        '\nDescripcion: ${description}';
+  }
 }

@@ -3,10 +3,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:weather/Provider/services/location_service.dart';
+import 'package:weather/Provider/services/weather_service.dart';
 import 'package:weather/presentation/view/main_view.dart';
+import 'package:weather/viewmodel/today_weather_viewmodel.dart';
 import 'model/domain/weather_model.dart';
+import 'package:get_it/get_it.dart';
+
+void setUp(){
+
+}
 
 void main() {
+  final getIt = GetIt.instance;
+  getIt.registerSingleton<WeatherService>(WeatherService());
+  getIt.registerSingleton<LocationService>(LocationService());
+  getIt.registerSingleton<TodayWeatherViewModel>(TodayWeatherViewModel());
   runApp(const MyApp());
 }
 

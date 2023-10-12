@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:weather/Provider/services/weather_service.dart';
 import 'package:weather/presentation/view/three_days_weather_view.dart';
 import 'package:weather/presentation/view/today_weather_view.dart';
+import 'package:weather/viewmodel/today_weather_viewmodel.dart';
 
 class MainView extends StatefulWidget{
+
   const MainView ({super.key});
+
 
   @override
   State<MainView> createState() => _MainViewState();
 }
 
 class _MainViewState extends State<MainView> {
-
   int selectedPage = 0;
+
 
   @override
   Widget build(BuildContext context) {
