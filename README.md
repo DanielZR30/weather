@@ -10,5 +10,5 @@ You must allow the location permissions.
 API: OpenWeatherAPI the app contains the API KEY
 icon is from https://www.flaticon.es/icono-gratis/weather-forecast_8280819?term=weather&page=1&position=18&origin=search&related_id=8280819
 
-https://raw.githubusercontent.com/DanielZR30/weather/main/Weather1.jpeg
-https://raw.githubusercontent.com/DanielZR30/weather/main/Weather2.jpeg
+![Image text](https://raw.githubusercontent.com/DanielZR30/weather/main/Weather1.jpeg)
+![Image text](https://raw.githubusercontent.com/DanielZR30/weather/main/Weather2.jpeg)
