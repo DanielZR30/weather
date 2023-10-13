@@ -65,20 +65,20 @@ class WeatherModel {
   WeatherModel.dayFromJson(Map<String, dynamic> json) {
     _description = json['weather'][0]['description'];
     _icon = json['weather'][0]['icon'];
-    _temperature = json['main']['temp'];
-    _minTemperature = json['main']['temp_min'];
-    _maxTemperature = json['main']['temp_max'];
+    _temperature = json['main']['temp'].toDouble();
+    _minTemperature = json['main']['temp_min'].toDouble();
+    _maxTemperature = json['main']['temp_max'].toDouble();
     _country = json['sys']['country'];
     _city = json['name'];
     _date = DateTime.now();
   }
 
-  WeatherModel.variousFromJson(Map<String,dynamic> json,String city, String country){
+  WeatherModel.manyFromJson(Map<String,dynamic> json,String city, String country){
     _description = json['weather'][0]['description'];
     _icon = json['weather'][0]['icon'];
-    _temperature = json['main']['temp'];
-    _minTemperature = json['main']['temp_min'];
-    _maxTemperature = json['main']['temp_max'];
+    _temperature = json['main']['temp'].toDouble();
+    _minTemperature = json['main']['temp_min'].toDouble();
+    _maxTemperature = json['main']['temp_max'].toDouble();
     _country = country;
     _city = city;
     _date = DateTime.parse(json['dt_txt']);

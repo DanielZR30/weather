@@ -35,8 +35,37 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        primaryColor: Color(0xffe96e50),
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+            color: Color(0xff2e2e2e),
+            fontSize: 22.0,
+            fontWeight: FontWeight.w600
+          ),
+          titleMedium: TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600
+          ),
+          titleSmall: TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500
+          ),
+          bodyLarge:
+          TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400
+          ),
+          bodyMedium:
+          TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 10.0,
+              fontWeight: FontWeight.w400
+          ),
+        )
       ),
       initialRoute: "/weather",
       routes: {

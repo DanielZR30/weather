@@ -47,13 +47,77 @@ class _Weather extends StatefulWidget{
 class _WeatherState extends State<_Weather> {
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
-        body: Center(
-          child: Column(
-            children:
+    TextTheme textTheme = Theme.of(context).textTheme;
+    bool isModel =widget.weather is WeatherModel;
+    WeatherModel data = new WeatherModel();
+    if(isModel) data = widget.weather;
+
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            (isModel)?'${data.city} - ${data.country}':'Algo salio mal.',
+            style: textTheme.titleLarge,
           ),
-        )
-      );
+          Text('last update: ${(isModel)?data.date:"No se tiene un ultimo registro."}',
+              style: textTheme.bodyLarge),
+          Image.network((isModel)?'https://openweathermap.org/img/wn/${data.icon}@2x.png':
+          'https://openweathermap.org/img/wn/10d@2x.png'),
+          Text((isModel)?'${data.description}':"--",style: textTheme.titleMedium),
+          Text((isModel)?'${data.temperature}°C':'--',style: textTheme.titleLarge),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 80,
+                width: 70,
+                margin: EdgeInsets.all(5),
+                alignment: Alignment.center,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                    [
+                      Text((isModel)?'${data.minTemperature}°C':'--',
+                          style: textTheme.bodyLarge),
+                      Text('max',
+                          style: textTheme.bodyLarge),
+                    ]
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor,
+                    width: 1,
+                  ),
+                ),
+              ),Container(
+                height: 80,
+                width: 70,
+                margin: EdgeInsets.all(5),
+                alignment: Alignment.center,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                  [
+                    Text((isModel)?'${data.maxTemperature}°C':'--',
+                        style: textTheme.bodyLarge),
+                    Text('max',
+                        style: textTheme.bodyLarge),
+                  ]
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor,
+                    width: 1,
+                  ),
+                ),
+              )
+            ]
+          )
+        ],
+      ),
+    );
   }
 }

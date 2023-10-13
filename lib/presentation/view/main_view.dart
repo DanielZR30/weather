@@ -36,19 +36,18 @@ class _MainViewState extends State<MainView> {
         elevation: 0,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.wb_sunny_outlined),
-            activeIcon: Icon(Icons.wb_sunny_rounded),
+            icon: Icon(Icons.wb_sunny_outlined,color: Color(0xffeeeeee)),
+            activeIcon: Icon(Icons.wb_sunny_rounded,color: Color(0xffeeeeee)),
             label: 'Today',
-            backgroundColor: colors.primary
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.thunderstorm_outlined),
-              activeIcon: Icon(Icons.thunderstorm_rounded),
+              icon: Icon(Icons.thunderstorm_outlined,color: Color(0xffeeeeee) ),
+              activeIcon: Icon(Icons.thunderstorm_rounded,color: Color(0xffeeeeee)),
               label: 'Week',
-              backgroundColor: colors.primary
           )
 
         ],
+        backgroundColor: Theme.of(context).primaryColor,
       ),
     );
   }

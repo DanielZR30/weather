@@ -56,7 +56,7 @@ class WeatherService{
   List<WeatherModel> getWeatherModelsFromJson(Map<String, dynamic> json) {
     final weatherModels = <WeatherModel>[];
     for (final item in json['list']) {
-      final weatherModel = WeatherModel.variousFromJson(item,
+      final weatherModel = WeatherModel.manyFromJson(item,
           json['city']['name'],json['city']['country']);
       weatherModels.add(weatherModel);
     }
