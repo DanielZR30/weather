@@ -26,7 +26,7 @@ class _ThreeDaysWeatherViewState extends State<ThreeDaysWeatherView> {
           builder: (BuildContext context,AsyncSnapshot snapshot){
 
             if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child:CircularProgressIndicator());
+              return Center(child:CircularProgressIndicator(color: Theme.of(context).primaryColor));
             }else{
               return _WeekWeather(snapshot.data);
             }
@@ -54,7 +54,7 @@ class _WeekWeatherState extends State<_WeekWeather> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text("3 Dias",style: Theme.of(context).textTheme.titleLarge,),
+                Text("3 Dias",style: Theme.of(context).textTheme.titleLarge),
                 Container(child: _DayWeather((isArray)?
                   widget.WeekWeather[0]:widget.WeekWeather)),
                 Container(child: _DayWeather((isArray)?

@@ -24,7 +24,7 @@ class _TodayWeatherViewState extends State<TodayWeatherView> {
           builder: (BuildContext context,AsyncSnapshot snapshot){
 
             if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child:CircularProgressIndicator());
+              return Center(child:CircularProgressIndicator(color: Theme.of(context).primaryColor));
             }else{
               return _Weather(snapshot.data);
             }
