@@ -1,6 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
+import 'package:weather/Provider/services/location_service.dart';
+import 'package:weather/Provider/services/weather_service.dart';
+import 'package:weather/presentation/view/main_view.dart';
+import 'package:weather/presentation/view/three_days_weather_view.dart';
+import 'package:weather/presentation/view/today_weather_view.dart';
+import 'package:weather/viewmodel/three_days_weather_viewmodel.dart';
+import 'package:weather/viewmodel/today_weather_viewmodel.dart';
+import 'model/domain/weather_model.dart';
+import 'package:get_it/get_it.dart';
+
+void setUp(){
+
+}
 
 void main() {
+  final getIt = GetIt.instance;
+  getIt.registerSingleton<WeatherService>(WeatherService());
+  getIt.registerSingleton<LocationService>(LocationService());
+  getIt.registerSingleton<TodayWeatherViewModel>(TodayWeatherViewModel());
+  getIt.registerSingleton<ThreeDaysWeatherViewModel>(ThreeDaysWeatherViewModel());
   runApp(const MyApp());
 }
 
@@ -13,25 +35,43 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        primaryColor: Color(0xffe96e50),
+        textTheme: TextTheme(
+          titleLarge: TextStyle(
+            color: Color(0xff2e2e2e),
+            fontSize: 22.0,
+            fontWeight: FontWeight.w600
+          ),
+          titleMedium: TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600
+          ),
+          titleSmall: TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500
+          ),
+          bodyLarge:
+          TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400
+          ),
+          bodyMedium:
+          TextStyle(
+              color: Color(0xff4e4e4e),
+              fontSize: 10.0,
+              fontWeight: FontWeight.w400
+          ),
+        )
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: "/weather",
+      routes: {
+        "/weather":(BuildContext context) => MainView(TodayWeatherView(),0),
+        "/week":(BuildContext context) => MainView(ThreeDaysWeatherView(),1)
+      },
     );
   }
 }
@@ -56,7 +96,45 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Location location = new Location();
 
+  void _getLocation() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    print(_locationData.latitude.toString() + " " + _locationData.longitude.toString());
+  }
+
+  void _getWeatherData() async{
+    var fetch = await fetchPost();
+    print("weather: "+jsonDecode(fetch.body).toString());
+  }
+
+  Future<http.Response> fetchPost() {
+    var uri = Uri.https('api.openweathermap.org','/data/2.5/weather',
+        {'lat':'6.25184','lon':'-75.56359','lang':'es',
+        'appid':'09c09d16add0d692539d39d53701650a','units':'metric'
+        });
+    return http.get(uri);
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -116,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _getWeatherData,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

@@ -4,13 +4,8 @@ Weather app for AZ SMART Test
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This app contains 2 screens, the first one shows the information of the current weather, the second one shows the information of the next 3 days.
+You must allow the location permissions.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+API: OpenWeatherAPI the app contains the API KEY
+icon is from https://www.flaticon.es/icono-gratis/weather-forecast_8280819?term=weather&page=1&position=18&origin=search&related_id=8280819
